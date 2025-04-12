@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NivoCarte Beta v1.0.4 - Générateur de cartes d'échange</title>
+    <link rel="icon" href="logoNav.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="conteneur">
+        <!-- En-tête de l'application -->
+        <header class="en-tete">
+            <div class="en-tete-gauche">
+                <img src="logo.png" alt="Electro Dépôt" class="logo">
+                <h1>- v1.0.4 - Générateur de cartes d'échange</h1>
+            </div>
+            
+            <!-- Bouton de bascule du thème -->
+            <label class="bouton-theme" aria-label="Basculer entre le mode clair et sombre">
+                <input type="checkbox" id="bascule-theme">
+                <span class="curseur-theme"></span>
+            </label>
+        </header>
+
+        <!-- Zone de recherche -->
+        <div class="zone-recherche">
+            <div class="conteneur-recherche">
+                <div class="ligne-recherche">
+                    <div class="boite-recherche">
+                        <input type="text" id="champ-recherche" placeholder="Rechercher un produit... (ex: iPhone, Samsung, etc.)" aria-label="Rechercher un produit">
+                        <button id="bouton-recherche">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            <span>Rechercher</span>
+                        </button>
+                    </div>
+                    <button id="bouton-recherche-avancee" class="bouton-recherche-avancee" title="Recherche avancée" aria-label="Recherche avancée">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="4" y1="21" x2="4" y2="14"></line>
+                            <line x1="4" y1="10" x2="4" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12" y2="3"></line>
+                            <line x1="20" y1="21" x2="20" y2="16"></line>
+                            <line x1="20" y1="12" x2="20" y2="3"></line>
+                            <line x1="1" y1="14" x2="7" y2="14"></line>
+                            <line x1="9" y1="8" x2="15" y2="8"></line>
+                            <line x1="17" y1="16" x2="23" y2="16"></line>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Recherche avancée -->
+                <div class="recherche-avancee" id="recherche-avancee">
+                    <div class="contenu-recherche-avancee">
+                        <div class="groupe-controle">
+                            <label for="champ-marque">Marque</label>
+                            <input type="text" id="champ-marque" placeholder="Samsung, Apple, etc.">
+                        </div>
+                        <div class="groupe-controle">
+                            <label for="champ-modele">Modèle</label>
+                            <input type="text" id="champ-modele" placeholder="S21, iPhone 12, etc.">
+                        </div>
+                        <div class="groupe-controle">
+                            <label for="variantes-recherche">Variantes à rechercher</label>
+                            <select id="variantes-recherche">
+                                <option value="basique">Basique (modèle seul)</option>
+                                <option value="communes">Communes (modèle + variations courantes)</option>
+                                <option value="toutes" selected>Toutes (modèle + toutes variations)</option>
+                            </select>
+                        </div>
+                        <div class="groupe-controle">
+                            <button id="bouton-recherche-avancee-executer" class="bouton">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                                Recherche avancée
+                            </button>
+                        </div>
+                    </div>
+                    <div class="barre-progression-recherche" id="barre-progression-recherche" style="display: none;">
+                        <div class="progression-recherche" id="progression-recherche"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Résultats des produits -->
+        <div class="grille-produits" id="resultats-produits">
+            <div class="chargement">
+                <div class="indicateur-chargement"></div>
+                <div>Chargement des produits...</div>
+            </div>
+        </div>
+
+        <!-- Générateur de carte (masqué par défaut) -->
+        <div id="section-generateur-carte">
+            <div class="en-tete-generateur">
+                <button id="bouton-retour-carte" class="bouton-retour">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Retour
+                </button>
+                <div style="font-weight: 500;">Générateur de carte</div>
+                <div style="width: 60px;"></div>
+            </div>
+
+            <div class="conteneur-application">
+                <!-- Panneau de paramètres -->
+                <div class="panneau">
+                    <div class="en-tete-panneau">
+                        <h2>Paramètres</h2>
+                        <button id="rafraichir-carte" class="bouton-rafraichir" title="Actualiser la carte" aria-label="Actualiser la carte">
+                            <svg class="icone-rafraichir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div id="message-etat" class="message-etat"></div>
+                    
+                    <div class="conteneur-controles">
+                        <div>
+                            <h3>Paramètres image produit</h3>
+                            <div class="groupe-controle">
+                                <label for="type-carte">Type de carte</label>
+                                <select id="type-carte">
+                                    <option value="neuf.png">Neuf</option>
+                                    <option value="reconditionne.png">Reconditionné</option>
+                                    <option value="NeufBlackfrayday.png">Neuf Black Friday</option>
+                                    <option value="ReconBlackfrayday.png">Reconditionné Black Friday</option>
+                                </select>
+                            </div>
+                            <div class="groupe-controle">
+                                <label for="taille-image">Taille image (px)</label>
+                                <input type="number" id="taille-image" value="200" min="50" max="300">
+                            </div>
+                            <div class="groupe-controle">
+                                <label for="position-x">Position X (px)</label>
+                                <input type="number" id="position-x" value="70" min="0" max="300">
+                            </div>
+                            <div class="groupe-controle">
+                                <label for="position-y">Position Y (px)</label>
+                                <input type="number" id="position-y" value="130" min="0" max="400">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3>Paramètres texte</h3>
+                            <div class="groupe-controle">
+                                <label for="texte-personnalise">Texte personnalisé</label>
+                                <textarea id="texte-personnalise" rows="3" placeholder="Entrez le texte à afficher sur la carte"></textarea>
+                            </div>
+                            <div class="groupe-controle">
+                                <label for="taille-texte">Taille texte (px)</label>
+                                <input type="number" id="taille-texte" value="16" min="10" max="30">
+                            </div>
+                            <div class="groupe-controle">
+                                <label for="position-y-texte">Position Y texte (px)</label>
+                                <input type="number" id="position-y-texte" value="100" min="0" max="400">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="conteneur-boutons">
+                        <button id="imprimer-carte" class="bouton">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                            Imprimer (2 cartes)
+                        </button>
+                    </div>
+                    
+                    <div id="etat-export" class="message-etat"></div>
+                </div>
+                
+                <!-- Panneau de prévisualisation -->
+                <div class="panneau">
+                    <div class="en-tete-panneau">
+                        <h2>Prévisualisation</h2>
+                    </div>
+                    
+                    <div class="conteneur-previsualisation">
+                        <img id="previsualisation-carte" src="neuf.png" alt="Modèle de carte">
+                        <div id="conteneur-image-telephone">
+                            <img id="image-telephone" src="https://via.placeholder.com/200x200?text=Sélectionnez+un+produit" alt="Image du produit">
+                        </div>
+                        <div id="texte-telephone"></div>
+                        <div id="conteneur-superposition"></div>
+                    </div>
+
+                    <div style="margin-top: var(--espace-grand);">
+                        <h3>Options supplémentaires</h3>
+                        <div class="conteneur-options">
+                            <button class="bouton-option" data-option="chargeur.png" aria-label="Ajouter chargeur">
+                                <i class="icone-option fa-solid fa-plug"></i>
+                                Chargeur
+                            </button>
+                            <button class="bouton-option" data-option="cable.png" aria-label="Ajouter câble">
+                                <i class="icone-option fa-brands fa-usb"></i>
+                                Câble USB
+                            </button>
+                            <button class="bouton-option" data-option="ecouteur.png" aria-label="Ajouter écouteurs">
+                                <i class="icone-option fa-solid fa-headphones"></i>
+                                Écouteurs
+                            </button>
+                            <button class="bouton-option" data-option="coque.png" aria-label="Ajouter coque">
+                                <i class="icone-option fa-solid fa-mobile-button"></i>
+                                Coque
+                            </button>
+                            <button class="bouton-option" data-option="verretrempe.png" aria-label="Ajouter verre trempé">
+                                <i class="icone-option fa-solid fa-shield"></i>
+                                Verre trempé
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Template pour l'impression (masqué) -->
+    <div id="template-impression" style="display: none;"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
