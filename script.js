@@ -55,7 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
         variantesRecherche: document.getElementById('variantes-recherche'),
         boutonRechercheAvanceeExecuter: document.getElementById('bouton-recherche-avancee-executer'),
         barreProgressionRecherche: document.getElementById('barre-progression-recherche'),
-        progressionRecherche: document.getElementById('progression-recherche')
+        progressionRecherche: document.getElementById('progression-recherche'),
+        boutonDeconnexion: document.getElementById('bouton-deconnexion')
     };
     
     // État de l'application
@@ -131,6 +132,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         
         elements.boutonRechercheAvanceeExecuter.addEventListener('click', gererRechercheAvancee);
+        
+        // Déconnexion
+        elements.boutonDeconnexion.addEventListener('click', function() {
+            localStorage.removeItem('estConnecte');
+            window.location.href = 'login.html';
+        });
     }
     
     // Vérifie la préférence de thème de l'utilisateur

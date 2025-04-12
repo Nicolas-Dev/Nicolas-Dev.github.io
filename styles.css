@@ -713,7 +713,7 @@ h3 {
     padding: var(--espace-moyen);
     border-radius: var(--arrondi-moyen);
     cursor: pointer;
-    width: 100%;
+    width: 60%;
     font-family: 'Inter', sans-serif;
     font-weight: 500;
     box-shadow: var(--ombre-legere);
